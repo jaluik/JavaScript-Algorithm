@@ -105,3 +105,6 @@ function escape(maze) {
   let output = solver(start[0], start[1], dir, history);
   return output;
 }
+
+let basicMazes = ["# ########", "#       >#", "##########"];
+console.log(escape(basicMazes));
