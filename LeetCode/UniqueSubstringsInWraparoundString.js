@@ -58,34 +58,65 @@
 //   }
 // };
 
-//使用一个hash表储存元素最大的子串，使用dp来计算元素子串长度
+// 使用一个hash表储存元素最大的子串，使用dp来计算元素子串长度
+// var findSubstringInWraproundString = function(p) {
+//   if (p.length == 0) return 0;
+//   var hash = new Map(),
+//     dp = [1];
+//   hash.set(p[0], 1);
+//   for (var i = 1; i < p.length; i++) {
+//     if (
+//       p[i].charCodeAt() - p[i - 1].charCodeAt() === 1 ||
+//       (p[i] == "a" && p[i - 1] == "z")
+//     ) {
+//       dp[i] = dp[i - 1] + 1;
+//     } else {
+//       dp[i] = 1;
+//     }
+//     if (hash.has(p[i])) {
+//       if (hash.get(p[i]) < dp[i]) {
+//         hash.set(p[i], dp[i]);
+//       }
+//     } else {
+//       hash.set(p[i], dp[i]);
+//     }
+//   }
+//   var res = 0;
+//   hash.forEach(function(val, index) {
+//     res += val;
+//   });
+//   return res;
+// };
+
+// my answer
 var findSubstringInWraproundString = function(p) {
-  if (p.length == 0) return 0;
-  var hash = new Map(),
-    dp = [1];
-  hash.set(p[0], 1);
-  for (var i = 1; i < p.length; i++) {
+  if (!p) return 0;
+  if (p.length === 1) return 1;
+  let mapCharToSubstrLength = {};
+  mapCharToSubstrLength[p[0]] = 1;
+  let currentLength = 1;
+  for (let i = 1; i < p.length; i++) {
     if (
       p[i].charCodeAt() - p[i - 1].charCodeAt() === 1 ||
-      (p[i] == "a" && p[i - 1] == "z")
+      (p[i] === "a" && p[i - 1] === "z")
     ) {
-      dp[i] = dp[i - 1] + 1;
+      currentLength++;
     } else {
-      dp[i] = 1;
+      currentLength = 1;
     }
-    if (hash.has(p[i])) {
-      if (hash.get(p[i]) < dp[i]) {
-        hash.set(p[i], dp[i]);
-      }
-    } else {
-      hash.set(p[i], dp[i]);
-    }
+    mapCharToSubstrLength[p[i]] = Math.max(
+      mapCharToSubstrLength[p[i]] || 1,
+      currentLength
+    );
   }
-  var res = 0;
-  hash.forEach(function(val, index) {
-    res += val;
-  });
+  let res = 0;
+  for (let [key, value] of Object.entries(mapCharToSubstrLength)) {
+    res += value;
+  }
   return res;
 };
-
-console.log(findSubstringInWraproundString("zabm"));
+console.log(
+  findSubstringInWraproundString(
+    "cdefghefghijklmnopqrstuvwxmnijklmnopqrstuvbcdefghijklmnopqrstuvwabcddefghijklfghijklmabcdefghijklmnopqrstuvwxymnopqrstuvwxyz"
+  )
+);
